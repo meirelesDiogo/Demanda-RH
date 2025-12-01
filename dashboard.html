@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel - Sistema RH</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h1>Painel do Sistema</h1>
+    <button onclick="logout()">Sair</button>
+</header>
+
+<!-- MENU GERENTE -->
+<nav id="menuGerente" style="display:none;">
+    <a onclick="mostrar('cadastro')">Cadastrar Funcionário</a>
+    <a onclick="mostrar('holerite')">Gerar Holerite</a>
+    <a onclick="mostrar('rescisao')">Calcular Rescisão</a>
+</nav>
+
+<!-- MENU FUNCIONÁRIO -->
+<nav id="menuFuncionario" style="display:none;">
+    <a onclick="mostrar('meusDados')">Meus Dados</a>
+    <a onclick="mostrar('editarDados')">Atualizar Dados</a>
+</nav>
+
+<div class="container">
+
+<!-- CADASTRO -->
+<section id="cadastro" class="section">
+    <h2>Cadastrar Funcionário</h2>
+    <form id="formCadastro">
+        <label>Código:</label>
+        <input id="codigo" required>
+
+        <label>Nome:</label>
+        <input id="nome" required>
+
+        <label>Data de Nascimento:</label>
+        <input id="nascimento" type="date" required>
+
+        <label>Telefone:</label>
+        <input id="telefone" required>
+
+        <label>Endereço:</label>
+        <input id="endereco" required>
+
+        <label>Cargo:</label>
+        <input id="cargo" required>
+
+        <label>Tipo de Usuário:</label>
+        <select id="tipo">
+            <option value="funcionario">Funcionário</option>
+            <option value="gerente">Gerente</option>
+        </select>
+
+        <label>Login:</label>
+        <input id="login" required>
+
+        <label>Senha:</label>
+        <input id="senha" type="password" required>
+
+        <button type="submit">Cadastrar</button>
+    </form>
+</section>
+
+<!-- HOLERITE -->
+<section id="holerite" class="section">
+    <h2>Gerar Holerite</h2>
+    <form id="formHolerite">
+        <label>Código do Funcionário:</label>
+        <input id="holerite_codigo" required>
+
+        <label>Salário Bruto:</label>
+        <input id="holerite_salario" type="number" required>
+
+        <label>Vale-Transporte (%):</label>
+        <input id="holerite_vt" type="number" value="6">
+
+        <button type="submit">Gerar Holerite</button>
+    </form>
+    <div id="resultado_holerite"></div>
+</section>
+
+<!-- RESCISÃO -->
+<section id="rescisao" class="section">
+    <h2>Rescisão Trabalhista</h2>
+    <form id="formRescisao">
+        <label>Código do Funcionário:</label>
+        <input id="res_codigo" required>
+
+        <label>Salário:</label>
+        <input id="res_salario" type="number" required>
+
+        <label>Data de Admissão:</label>
+        <input id="res_adm" type="date" required>
+
+        <label>Data de Demissão:</label>
+        <input id="res_dem" type="date" required>
+
+        <button type="submit">Calcular Rescisão</button>
+    </form>
+    <div id="resultado_rescisao"></div>
+</section>
+
+<!-- MEUS DADOS -->
+<section id="meusDados" class="section">
+    <h2>Meus Dados</h2>
+    <div id="dadosFuncionario"></div>
+</section>
+
+<!-- EDITAR DADOS -->
+<section id="editarDados" class="section">
+    <h2>Atualizar Dados</h2>
+    <form id="formAtualizar">
+        <label>Telefone:</label>
+        <input id="edit_telefone">
+
+        <label>Endereço:</label>
+        <input id="edit_endereco">
+
+        <button type="submit">Salvar Alterações</button>
+    </form>
+</section>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
