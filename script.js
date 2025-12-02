@@ -175,10 +175,8 @@ document.getElementById("formHolerite")?.addEventListener("submit", function(e) 
         <hr>
         <p><b>Salário Líquido:</b> R$ ${liquido.toFixed(2)}</p>
     `;
-});
-
-/* ------------------------------------------------
-   RESCISÃO – CÁLCULO CORRIGIDO (REGRAS OFICIAIS)
+});/* ------------------------------------------------
+   RESCISÃO – CÁLCULO CORRIGIDO
 --------------------------------------------------*/
 document.getElementById("formRescisao")?.addEventListener("submit", function(e) {
     e.preventDefault();
@@ -193,63 +191,58 @@ document.getElementById("formRescisao")?.addEventListener("submit", function(e) 
     let adm = new Date(res_adm.value);
     let dem = new Date(res_dem.value);
 
-    /* --- Saldo de salário (dias trabalhados no mês) --- */
+    /* --- MESES TRABALHADOS (CORRETO) --- */
+    let mesesTrabalhados =
+        (dem.getFullYear() - adm.getFullYear()) * 12 +
+        (dem.getMonth() - adm.getMonth()) + 1;
+
+    if (mesesTrabalhados < 0) mesesTrabalhados = 0;
+
+    /* --- Saldo de salário --- */
     let diasTrabalhados = dem.getDate();
     let saldoSalario = (salario / 30) * diasTrabalhados;
 
-    /* --- Aviso prévio proporcional real --- */
-    let anosCompletos = dem.getFullYear() - adm.getFullYear();
-    let avisoDias = 30 + anosCompletos * 3;
-    if (avisoDias > 90) avisoDias = 90;
-
+    /* --- Aviso prévio --- */
+    let avisoDias = 30; 
     let avisoValor = (salario / 30) * avisoDias;
 
-    /* --- 13º proporcional --- */
-    let mesesAno = dem.getMonth() + 1;
-    if (dem.getDate() < 15) mesesAno -= 1;
-    let decimo = (salario / 12) * mesesAno;
+    /* --- 13º proporcional (CORRIGIDO) --- */
+    let decimo = (salario / 12) * mesesTrabalhados;
 
-    /* --- Férias vencidas reais (um período por ano completo trabalhado) --- */
+    /* --- Férias vencidas --- */
     let feriasVencidas = 0;
-    let periodosCompletos = anosCompletos; 
 
-    for (let i = 0; i < periodosCompletos; i++) {
-        feriasVencidas += salario + salario / 3;
-    }
-
-    /* --- Férias proporcionais --- */
-    let mesesFerias = mesesAno;
-    let feriasProp = (salario / 12) * mesesFerias;
+    /* --- Férias proporcionais + 1/3 (CORRIGIDO) --- */
+    let feriasProp = (salario / 12) * mesesTrabalhados;
     let feriasTerco = feriasProp / 3;
 
-    /* --- FGTS acumulado + multa 40% --- */
-    let mesesTotais =
-        (dem.getFullYear() - adm.getFullYear()) * 12 +
-        (dem.getMonth() - adm.getMonth());
+    /* --- FGTS --- */
+    let fgtsMensal = salario * 0.08;
+    let fgtsAcumulado = fgtsMensal * mesesTrabalhados;
+    let multaFGTS = fgtsAcumulado * 0.40;
 
-    let fgtsAcumulado = mesesTotais * (salario * 0.08);
-    let multaFGTS = (fgtsAcumulado * 0.40);
-
-    /* --- TOTAL CORRETO --- */
+    /* --- TOTAL --- */
     let total =
         saldoSalario +
         avisoValor +
         decimo +
-        
         feriasProp +
-        
+        feriasTerco +
         multaFGTS;
 
     document.getElementById("resultado_rescisao").innerHTML = `
         <h3>Rescisão - ${func.nome}</h3>
+
         <p><b>Saldo de Salário:</b> R$ ${saldoSalario.toFixed(2)}</p>
-        <p><b>Aviso Prévio (${avisoDias} dias):</b> R$ ${avisoValor.toFixed(2)}</p>
-        <p><b>13º Proporcional:</b> R$ ${decimo}</p>
-        
+        <p><b>Aviso Prévio:</b> R$ ${avisoValor.toFixed(2)}</p>
+        <p><b>13º Proporcional:</b> R$ ${decimo.toFixed(2)}</p>
+
         <p><b>Férias Proporcionais:</b> R$ ${feriasProp.toFixed(2)}</p>
-        
+        <p><b>1/3 Férias Proporcionais:</b> R$ ${feriasTerco.toFixed(2)}</p>
+
         <p><b>Multa FGTS (40%):</b> R$ ${multaFGTS.toFixed(2)}</p>
+
         <hr>
-        <p><b>Total a Receber:</b> R$ ${total}</p>
+        <p><b>Total a Receber:</b> R$ ${total.toFixed(2)}</p>
     `;
 });
